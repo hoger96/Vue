@@ -1,0 +1,64 @@
+{
+  "users": [
+    {
+      "userId": "fourkimm",
+      "userName": "김영현",
+      "userPwd": "dudgusdldi96"
+    },
+    {
+      "userId": "24happy",
+      "userName": "엄마",
+      "userPwd": "0826"
+    }
+  ],
+  "todoList": [
+    {
+      "user": "24happy",
+      "text": "mom",
+      "done": false,
+      "id": 1
+    },
+    {
+      "user": "24happy",
+      "text": "mother",
+      "done": false,
+      "id": 2
+    },
+    {
+      "user": "24happy",
+      "text": "엄마",
+      "done": false,
+      "id": 3
+    },
+    {
+      "user": "fourkimm",
+      "text": "영현",
+      "done": false,
+      "id": 4
+    },
+    {
+      "user": "fourkimm",
+      "text": "내꺼투두d",
+      "done": false,
+      "id": 5
+    },
+    {
+      "user": "fourkimm",
+      "text": "김",
+      "done": false,
+      "id": 6
+    },
+    {
+      "user": "fourkimm",
+      "text": "영",
+      "done": false,
+      "id": 7
+    },
+    {
+      "user": "fourkimm",
+      "text": "현",
+      "done": false,
+      "id": 8
+    }
+  ]
+}
