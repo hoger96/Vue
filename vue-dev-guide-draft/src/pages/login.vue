@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 
 const idInput = ref('')
 const idInputRef = ref('')
@@ -15,7 +14,6 @@ const loginCheck = async () => {
 
   const memberLogin = users.value.filter(user => (user.userId === idInput.value && user.userPwd === pwdInput.value))
   if (memberLogin.length === 0) {
-    Console.log('실패')
     confirm('아이디와 비밀번호를 확인하세요')
     idInput.value = ''
     pwdInput.value = ''

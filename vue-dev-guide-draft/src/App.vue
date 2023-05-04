@@ -20,6 +20,8 @@ useHead({
     },
   ],
 })
+
+// getSession 하는거 넣기
 </script>
 
 <template>

@@ -1,14 +1,13 @@
 <script setup>
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 
-const todoValue = ref('')
-const todoInput = ref(null)
+const todoText = ref('')
 const todoList = ref([])
 const objectUpdateTodo = ref('')
-const updateTodoValue = ref('')
+const updateTodoText = ref('')
 const modifyBtn = ref(true)
 const route = useRoute()
+const router = useRouter()
 const loginId = route.params.userId
 
 const todoDoneCount = computed(() => {
@@ -16,6 +15,9 @@ const todoDoneCount = computed(() => {
 })
 
 const showList = async () => {
+  if (loginId === undefined)
+    router.push('login')
+
   try {
     const response = await axios.get('/api/v1/todoList')
     todoList.value = response.data.filter(todo => todo.user === loginId)
@@ -27,15 +29,15 @@ const showList = async () => {
 showList()
 
 const addTodo = async () => {
-  if (!todoValue.value)
+  if (!todoText.value)
     return
   const newTodo = {
     user: loginId,
-    text: todoValue.value,
+    text: todoText.value,
     done: false,
   }
   await axios.post('/api/v1/todoList', newTodo)
-  todoValue.value = ''
+  todoText.value = ''
   showList()
 }
 
@@ -46,12 +48,12 @@ const deleteTodo = async (todo) => {
 
 const choiceUpdateTodo = (todo) => {
   objectUpdateTodo.value = todo.id
-  updateTodoValue.value = todo.text
+  updateTodoText.value = todo.text
 }
 
 const updateTodo = async (todo) => {
   const newUpdateTodo = {
-    text: updateTodoValue.value,
+    text: updateTodoText.value,
   }
 
   if (objectUpdateTodo.value === todo.id) {
@@ -81,12 +83,16 @@ const checkingDoneOrNot = async (todo) => {
   }
 }
 
-const allDelete = async () => {
+const doneDelete = async () => {
   const doneObject = todoList.value.filter(todo => todo.done)
 
   for (let i = 0; i < doneObject.length; i++)
     await axios.delete(`/api/v1/todoList/${doneObject[i].id}`)
   showList()
+}
+
+const logOut = () => {
+  router.push('/login')
 }
 </script>
 
@@ -95,9 +101,12 @@ const allDelete = async () => {
     <h1 class="font-mono text-4xl pt-5">
       To Do List
     </h1>
-    <p class="text-xs absolute right-5 top-19">
-      {{ route.params.userId }} 님
+    <p class="text-xs absolute right-12 top-18.5">
+      {{ loginId }} 님
     </p>
+    <button class="icon-btn mx-2 !outline-none absolute right-3 top-18" @click="logOut">
+      <div i="carbon-logout" />
+    </button>
     <div class="flex px-mx-auto">
       <div class="first-wrap">
         <div class="f-one">
@@ -118,7 +127,7 @@ const allDelete = async () => {
           <p class="ml-18">
             Checklist
           </p>
-          <button class="icon-btn mx-2 !outline-none " @click="allDelete(todo)">
+          <button class="icon-btn mx-2 !outline-none " @click="doneDelete(todo)">
             <div i="carbon-trash-can" />
           </button>
         </div>
@@ -128,7 +137,7 @@ const allDelete = async () => {
               <li v-for="todo in todoList" :key="`todo-userId-${todo.userId}`" class="flex">
                 <el-checkbox v-model="todo.done" size="large" @click="checkingDoneOrNot(todo)" />
                 <div v-if="objectUpdateTodo === todo.id" class="w-37 m-0">
-                  <el-input v-model="updateTodoValue" class="mt-1 ml-2" @keyup.enter="updateTodo(todo)" />
+                  <el-input v-model="updateTodoText" class="mt-1 ml-2" @keyup.enter="updateTodo(todo)" />
                 </div>
                 <div v-else class="mt-2 ml-4">
                   <span>{{ todo.text }}</span>
@@ -152,7 +161,7 @@ const allDelete = async () => {
             Finish  :::   {{ todoDoneCount }}
           </p>
           <div class="flex">
-            <el-input ref="todoInput" v-model="todoValue" placeholder="Enter Todo" @keyup.enter="addTodo" />
+            <el-input v-model="todoText" placeholder="Enter Todo" @keyup.enter="addTodo" />
             <button class="icon-btn mx-2 !outline-none " @click="addTodo">
               <div i="carbon-add" />
             </button>

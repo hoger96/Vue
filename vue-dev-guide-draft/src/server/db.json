@@ -38,12 +38,6 @@
     },
     {
       "user": "fourkimm",
-      "text": "내꺼투두d",
-      "done": false,
-      "id": 5
-    },
-    {
-      "user": "fourkimm",
       "text": "김",
       "done": false,
       "id": 6
@@ -59,6 +53,30 @@
       "text": "현",
       "done": false,
       "id": 8
+    },
+    {
+      "user": "fourkimm",
+      "text": "rla",
+      "done": false,
+      "id": 9
+    },
+    {
+      "user": "fourkimm",
+      "text": "dudgusdl",
+      "done": false,
+      "id": 10
+    },
+    {
+      "user": "fourkimm",
+      "text": "얄루",
+      "done": false,
+      "id": 11
+    },
+    {
+      "user": "fourkimm",
+      "text": "히히",
+      "done": false,
+      "id": 12
     }
   ]
 }
