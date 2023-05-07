@@ -15,11 +15,8 @@ const todoDoneCount = computed(() => {
 })
 
 const showList = async () => {
-  if (loginId === undefined)
-    router.push('login')
-
   try {
-    const response = await axios.get('/api/v1/todoList')
+    const response = await axios.get('/api/v1/todos')
     todoList.value = response.data.filter(todo => todo.user === loginId)
   }
   catch (e) {
@@ -36,13 +33,13 @@ const addTodo = async () => {
     text: todoText.value,
     done: false,
   }
-  await axios.post('/api/v1/todoList', newTodo)
+  await axios.post('/api/v1/todos', newTodo)
   todoText.value = ''
   showList()
 }
 
 const deleteTodo = async (todo) => {
-  await axios.delete(`/api/v1/todoList/${todo.id}`)
+  await axios.delete(`/api/v1/todos/${todo.id}`)
   showList()
 }
 
@@ -60,7 +57,7 @@ const updateTodo = async ({ text, id }) => {
     text,
   }
   try {
-    await axios.patch(`/api/v1/todoList/${id}`, UpdateTodoText)
+    await axios.patch(`/api/v1/todos/${id}`, UpdateTodoText)
     updateTodoId.value = ''
     showList()
   }
@@ -76,7 +73,7 @@ const saveDone = async (todo) => {
   }
 
   try {
-    const res = await axios.patch(`/api/v1/todoList/${todo.id}`, updateDone)
+    const res = await axios.patch(`/api/v1/todos/${todo.id}`, updateDone)
     showList()
   }
   catch (error) {
@@ -88,12 +85,12 @@ const deleteDone = async () => {
   const doneObject = todoList.value.filter(todo => todo.done)
 
   for (let i = 0; i < doneObject.length; i++)
-    await axios.delete(`/api/v1/todoList/${doneObject[i].id}`)
+    await axios.delete(`/api/v1/todos/${doneObject[i].id}`)
   showList()
 }
 
 const logOut = () => {
-  router.push('/login')
+  router.push('/server_login')
 }
 </script>
 
