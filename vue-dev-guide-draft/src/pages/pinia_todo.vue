@@ -8,10 +8,11 @@ const updateTodoId = ref('')
 const modifyText = ref('')
 const route = useRoute()
 const router = useRouter()
+const loginId = route.params.userId
 const sessionStore = useSessionStore()
 
 if (!sessionStore.isLogin)
-  router.push('/server_login')
+  router.push('/pinia_login')
 
 const todoDoneCount = computed(() => {
   return todoList.value.filter(object => object.done).length
@@ -19,8 +20,8 @@ const todoDoneCount = computed(() => {
 
 const showList = async () => {
   try {
-    const response = await axios.get('/api/v1/todos')
-    todoList.value = response.data.filter(todo => todo.userid === sessionStore.userId)
+    const response = await axios.get('/api/v1/todoList')
+    todoList.value = response.data.filter(todo => todo.user === loginId)
   }
   catch (e) {
     logger.error(e)
@@ -32,16 +33,17 @@ const addTodo = async () => {
   if (!todoText.value)
     return
   const newTodo = {
-    userid: sessionStore.userId,
+    user: loginId,
     text: todoText.value,
+    done: false,
   }
-  await axios.post('/api/v1/todos', newTodo)
+  await axios.post('/api/v1/todoList', newTodo)
   todoText.value = ''
   showList()
 }
 
 const deleteTodo = async (todo) => {
-  await axios.delete(`/api/v1/todos/${todo.id}`)
+  await axios.delete(`/api/v1/todoList/${todo.id}`)
   showList()
 }
 
@@ -59,7 +61,7 @@ const updateTodo = async ({ text, id }) => {
     text,
   }
   try {
-    await axios.put(`/api/v1/todos/${id}`, UpdateTodoText)
+    await axios.patch(`/api/v1/todoList/${id}`, UpdateTodoText)
     updateTodoId.value = ''
     showList()
   }
@@ -69,8 +71,13 @@ const updateTodo = async ({ text, id }) => {
 }
 
 const saveDone = async (todo) => {
+  const doneOrNot = !todo.done
+  const updateDone = {
+    done: doneOrNot,
+  }
+
   try {
-    const res = await axios.put(`/api/v1/todos/done/${todo.id}`)
+    const res = await axios.patch(`/api/v1/todoList/${todo.id}`, updateDone)
     showList()
   }
   catch (error) {
@@ -82,7 +89,7 @@ const deleteDone = async () => {
   const doneObject = todoList.value.filter(todo => todo.done)
 
   for (let i = 0; i < doneObject.length; i++)
-    await axios.delete(`/api/v1/todos/${doneObject[i].id}`)
+    await axios.delete(`/api/v1/todoList/${doneObject[i].id}`)
   showList()
 }
 </script>
@@ -93,9 +100,9 @@ const deleteDone = async () => {
       To Do List
     </h1>
     <p class="text-xs absolute right-12 top-18.5">
-      {{ sessionStore.userName }} 님
+      {{ loginId }} 님
     </p>
-    <router-link class="icon-btn mx-2 !outline-none absolute right-3 top-18" to="/logout">
+    <router-link to="/logout" class="icon-btn mx-2 !outline-none absolute right-3 top-18">
       <div i="carbon-logout" />
     </router-link>
     <div class="flex px-mx-auto">
@@ -126,7 +133,7 @@ const deleteDone = async () => {
           <div class="relative">
             <ul>
               <li v-for="todo in todoList" :key="`todo-userId-${todo.userId}`" class="flex">
-                <el-checkbox v-model="todo.done" size="large" @change="saveDone(todo)" />
+                <el-checkbox v-model="todo.done" size="large" @click="saveDone(todo)" />
                 <update-input v-if="updateTodoId === todo.id" :id="updateTodoId" :text="updateTodoText" @update-todo="updateTodo" @cancel-update-todo="cancelUpdateTodo" />
                 <div v-else class="mt-2 ml-4">
                   <span>{{ todo.text }}</span>

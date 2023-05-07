@@ -1,26 +1,42 @@
 <script setup>
-import { onMounted } from 'vue'
 import axios from 'axios'
 
-const idInput = ref('')
+const userId = ref('')
 const idInputRef = ref('')
-const pwdInput = ref('')
+const userPw = ref('')
 const router = useRouter()
 const users = ref([])
+const sessionStore = useSessionStore()
 
-const doLogin = async () => {
+const loginCheck = async () => {
   const frm = new FormData()
-  frm.append('id', idInput.value)
-  frm.append('pwd', pwdInput.value)
+  frm.append('id', userId.value)
+  frm.append('pwd', userPw.value)
 
   try {
     const res = await axios.post('/api/v1/users/', frm)
-    router.push('/server_todo')
+    if (res.data.success) {
+      sessionStore.setSession({
+        id: res.data.userid,
+        name: res.data.username,
+      })
+      router.push('/server_todo')
+    }
+    else {
+      confirm('아이디와 비밀번호가 일치하지 않습니다')
+    }
   }
-
   catch (err) {
     console.error(err)
   }
+}
+
+const login = async () => {
+  if (!userId.value)
+    confirm('아이디를 입력하세요')
+  else if (!userPw.value)
+    confirm('비밀번호를 입력하세요')
+  else loginCheck()
 }
 </script>
 
@@ -30,9 +46,9 @@ const doLogin = async () => {
       Login
     </h1>
     <div class="login-wrap">
-      <el-input ref="idInputRef" v-model="idInput" class="mb-2" placeholder="ID" @keyup.enter="doLogin" />
-      <el-input v-model="pwdInput" placeholder="PW" type="password" @keyup.enter="doLogin" />
-      <button class="icon-btn mt-10 !outline-none" @click="doLogin">
+      <el-input ref="idInputRef" v-model="userId" class="mb-2" placeholder="ID" @keyup.enter="login" />
+      <el-input v-model="userPw" placeholder="PW" type="password" @keyup.enter="login" />
+      <button class="icon-btn mt-10 !outline-none" @click="login">
         <div i="carbon-location-person" :style="{ width: `${40}px`, height: `${40}px` }" />
       </button>
     </div>

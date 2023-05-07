@@ -5,6 +5,7 @@ const userId = ref('')
 const userPw = ref('')
 const router = useRouter()
 const sessionStore = useSessionStore()
+
 const login = () => {
   // 1. id와 pw값을 가지고, API를 조회해서 문제없이 pass할 경우 계속 진행
   // 2. login API가 패스 될 경우, session에 정보를 저장
@@ -14,7 +15,7 @@ const login = () => {
     userName: '김영현',
   })
 
-  router.push('/todo_suni')
+  router.push('/pinia_todo')
 }
 </script>
 
@@ -24,7 +25,7 @@ const login = () => {
       Login
     </h1>
     <div class="login-wrap">
-      <el-input ref="idInputRef" v-model="userId" class="mb-2" placeholder="ID" @keyup.enter="doLogin" />
+      <el-input ref="idInputRef" v-model="userId" class="mb-2" placeholder="ID" @keyup.enter="login" />
       <el-input v-model="userPw" placeholder="PW" type="password" @keyup.enter="login" />
       <button class="icon-btn mt-10 !outline-none" @click="login">
         <div i="carbon-location-person" :style="{ width: `${40}px`, height: `${40}px` }" />

@@ -7,7 +7,7 @@ export const useSessionStore = defineStore('session', () => {
 
   const isLogin = computed(() => userId.value !== '')
 
-  const setSession = (id, name) => {
+  const setSession = ({ id, name }) => {
     userId.value = id
     userName.value = name
   }
