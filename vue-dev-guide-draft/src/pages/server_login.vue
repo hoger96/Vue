@@ -9,12 +9,13 @@ const users = ref([])
 const sessionStore = useSessionStore()
 
 const loginCheck = async () => {
-  const frm = new FormData()
-  frm.append('id', userId.value)
-  frm.append('pwd', userPw.value)
+  const userInfo = {
+    id: userId.value,
+    pwd: userPw.value,
+  }
 
   try {
-    const res = await axios.post('/api/v1/users/', frm)
+    const res = await axios.post('/api/v1/users/', userInfo)
     if (res.data.success) {
       sessionStore.setSession({
         id: res.data.userid,
