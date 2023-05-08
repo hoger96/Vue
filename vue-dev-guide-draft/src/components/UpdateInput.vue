@@ -4,16 +4,15 @@ const props = defineProps({
   id: Number,
 })
 const emit = defineEmits(['updateTodo', 'cancelUpdateTodo'])
-
 const updateTargetText = ref('')
+const targetToUpdate = ref(props.text)
+
 const inputfocus = () => {
   updateTargetText.value.focus()
 }
 onMounted(() => {
   inputfocus()
 })
-
-const targetToUpdate = ref(props.text)
 
 const updateTodo = (todo) => {
   emit('updateTodo', {
