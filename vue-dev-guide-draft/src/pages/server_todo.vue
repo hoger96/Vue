@@ -1,14 +1,14 @@
 <script setup>
 import axios from 'axios'
+const sessionStore = useSessionStore()
+const route = useRoute()
+const router = useRouter()
 
 const todoText = ref('')
 const todoList = ref([])
 const updateTodoText = ref('')
 const updateTodoId = ref('')
 const modifyText = ref('')
-const route = useRoute()
-const router = useRouter()
-const sessionStore = useSessionStore()
 
 if (!sessionStore.isLogin)
   router.push('/server_login')
@@ -20,7 +20,7 @@ const todoDoneCount = computed(() => {
 const showList = async () => {
   try {
     const response = await axios.get('/api/v1/todos')
-    todoList.value = response.data.filter(todo => todo.userid === sessionStore.userId)
+    todoList.value = response.data
   }
   catch (e) {
     logger.error(e)

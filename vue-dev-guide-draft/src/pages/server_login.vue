@@ -1,12 +1,12 @@
 <script setup>
 import axios from 'axios'
+const sessionStore = useSessionStore()
+const router = useRouter()
 
 const userId = ref('')
 const idInputRef = ref('')
 const userPw = ref('')
-const router = useRouter()
 const users = ref([])
-const sessionStore = useSessionStore()
 
 const loginCheck = async () => {
   const userInfo = {
